@@ -12,6 +12,8 @@ import com.qualcomm.robotcore.hardware.ServoImplEx;
 
 import org.firstinspires.ftc.teamcode.Constants;
 
+import java.util.Optional;
+
 public class TurretSubsystem {
 
     private final CRServoImplEx turretServo;
@@ -23,13 +25,26 @@ public class TurretSubsystem {
 
     private double power = 0.0;
 
-    public TurretSubsystem(HardwareMap hardwareMap) {
+    private Vision vision;
+
+    public TurretSubsystem(HardwareMap hardwareMap, Vision vision) {
         turretServo = hardwareMap.get(CRServoImplEx.class, "TurretServo");
+        this.vision = vision;
         pidController = new PIDController(
                 Constants.TurretConstants.kP,
                 Constants.TurretConstants.kI,
                 Constants.TurretConstants.kD
         );
+    }
+
+    public void loop() {
+        Optional<Double> angle = vision.getXDegrees();
+
+        if (!angle.isPresent()) {
+            setPosition(0);
+        }
+
+        setPosition(angle.get());
     }
 
     /**
