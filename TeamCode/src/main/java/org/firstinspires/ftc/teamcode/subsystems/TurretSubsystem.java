@@ -22,10 +22,9 @@ public class TurretSubsystem {
     // multi-turn tracking
     private double revolutions = 0.0;
     private double lastRawPosition = 0.0;
-
     private double power = 0.0;
 
-    private Vision vision;
+    private final Vision vision;
 
     public TurretSubsystem(HardwareMap hardwareMap, Vision vision) {
         turretServo = hardwareMap.get(CRServoImplEx.class, "TurretServo");
@@ -43,6 +42,8 @@ public class TurretSubsystem {
         if (!angle.isPresent()) {
             setPosition(0);
         }
+
+        if (!angle.isPresent()) return;
 
         setPosition(angle.get());
     }
